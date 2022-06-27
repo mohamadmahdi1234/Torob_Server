@@ -79,13 +79,14 @@ const confirmOTP = async(req,res)=>{
             if(validOtp === true){
                 const user = new User({
                     _id: new mongoose.Types.ObjectId(),
-                    email: otps[0].email,
+                    email: otps[0].user_email,
                     password:otps[0].password ,
                     name : otps[0].name,
                   });
                 await user.save();
                 await OTP.deleteMany({name:req.body.name});
-                const token = tokenGenerator.Generator(user.email,user._id); 
+                const token = tokenGenerator.generator(user.email,user._id); 
+                console.log(token);
                   return res.status(200).json({
                     token: token,
                     "message": "successful"

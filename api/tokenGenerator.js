@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
- const Generator = (user_email,user_id)=>{
+require('dotenv').config();
+ const generator = (user_email,user_id)=>{
     return jwt.sign(
         {
           email: user_email,
@@ -13,4 +14,4 @@ const jwt = require("jsonwebtoken");
 
  }
 
- module.exports = {Generator};
+ module.exports = {generator};

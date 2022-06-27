@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { isValidPassword } = require('mongoose-custom-validators');
 
 const OTPSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
