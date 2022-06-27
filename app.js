@@ -9,9 +9,6 @@ mongoose.connect('mongodb://localhost/Torob_DataBase')
   })
   .catch(err => console.log(err))
 
-
-
-
 //middlewares
 app.use(morgan('dev'));
 app.use(bodyparser.urlencoded({extended:false}));
