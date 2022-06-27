@@ -7,7 +7,18 @@ const OTPSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    createdAt:{type:Date,default:Date.now,index:{expires:300}}
+    createdAt:{type:Date,default:Date.now,index:{expires:300}},
+    name : {
+        type : String,
+        required: true
+    },
+    password: { type: String,
+        required: true,
+        min: [6, 'Too few'],
+        validate: {
+           validator: (str) => isValidPassword(str, { nonalpha: false,minlength:8 }),
+           message: 'Password must have at least: 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.'
+         } },
     
 },{timestamps:true});
 
