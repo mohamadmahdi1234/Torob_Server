@@ -19,8 +19,7 @@ const UserSchema = mongoose.Schema({
             validator: isValidPassword,
             message: 'Password must have at least: 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.'
           } },
-    Date_of_join : {type : Date , default : null},
     
-});
+},{timestamps:true});
 
 module.exports = mongoose.model('User', UserSchema);
