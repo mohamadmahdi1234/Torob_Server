@@ -3,7 +3,8 @@ const app = express();
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
-const OTTPs =require('./api/models/OTP');
+const otp =require('./api/models/OTP');
+const authRouter = require('./api/routers/authRouter');
 mongoose.connect('mongodb://localhost/Torob_DataBase')
   .then(() => {
     console.log('connected to database')
@@ -29,7 +30,7 @@ app.use((req,res,next)=>{
     next();
 });
 
-
+app.use('/api/auth',authRouter);
 
 app.use((req,res,next)=>{
     const error = new Error('not found');
