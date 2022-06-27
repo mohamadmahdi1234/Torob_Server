@@ -9,11 +9,16 @@ const userSignup = async (req,res)=>{
         const Users = await User.find({name:req.body.name}).exec();
         if(Users.length<1){
             const hash_pass = await bcrypt.hash(req.body.password, 10);
+            console.log(hash_pass);
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 email: req.body.email,
-                password: hash_pass,
+                password:req.body.password ,
                 name : req.body.name,
+              });
+              await user.save();
+              return res.status(200).json({
+                message:"yes"
               });
 
 
@@ -23,7 +28,7 @@ const userSignup = async (req,res)=>{
 
     }catch(err){
         console.log(err);
-        return error_400_bad_request(res,'bad request!');
+        return error_400_bad_request(res,err.message);
     }
 
 };
