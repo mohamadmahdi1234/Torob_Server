@@ -18,12 +18,6 @@ const userSignup = async (req,res)=>{
         if(Users.length<1){
             const hash_pass = await bcrypt.hash(req.body.password, 10);
             console.log(hash_pass);
-            const user = new User({
-                _id: new mongoose.Types.ObjectId(),
-                email: req.body.email,
-                password:req.body.password ,
-                name : req.body.name,
-              });
             const otp_value = otpGenerator.generate(6,{
                 digits:true,lowerCaseAlphabets:false,upperCaseAlphabets:false,specialChars:false,
             });
@@ -34,7 +28,7 @@ const userSignup = async (req,res)=>{
                 user_email:req.body.email,
                 otp:otp_value_hash,
                 email: req.body.email,
-                password:req.body.password ,
+                password:hash_pass,
                 name : req.body.name,
             });
             await otp_record.save();
@@ -75,6 +69,26 @@ const userSignup = async (req,res)=>{
 
 const confirmOTP = async(req,res)=>{
     try{
+        const six_digit = req.body.number;
+        const otps = await OTP.find({name:req.body.name}).exec();
+        if(otps<1){
+            return error_400_bad_request(res,'no shuch user found or code expired!');
+        }else{
+            const validOtp = await bcrypt.compare(req.body.number, otps[0].otp);
+            if(validOtp === true){
+                const user = new User({
+                    _id: new mongoose.Types.ObjectId(),
+                    email: otps[0].email,
+                    password:otps[0].password ,
+                    name : otps[0].name,
+                  });
+                await OTP.deleteMany({name:req.body.name});
+                
+
+            }else{
+                return error_400_bad_request(res,'wrong code!');
+            }
+        }
 
 
     }catch(err){
