@@ -1,0 +1,19 @@
+{
+  "name": "torob_server",
+  "version": "1.0.0",
+  "description": "server part of net project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohamadmahdi1234/Torob_Server.git"
+  },
+  "author": "mahdy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mohamadmahdi1234/Torob_Server/issues"
+  },
+  "homepage": "https://github.com/mohamadmahdi1234/Torob_Server#readme"
+}
