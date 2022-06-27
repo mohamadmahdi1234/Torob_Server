@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
+const OTTPs =require('./api/models/OTP');
 mongoose.connect('mongodb://localhost/Torob_DataBase')
   .then(() => {
     console.log('connected to database')
