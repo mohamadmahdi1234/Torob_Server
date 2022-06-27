@@ -11,6 +11,7 @@ require('dotenv').config();
 const OAuth2 = google.auth.OAuth2;
 const OAuth2_client = new OAuth2(process.env.CLIENT_ID,process.env.CLIENT_PASS);
 OAuth2_client.setCredentials({refresh_token:process.env.REFRESH_TOKEN});
+const tokenGenerator = require('../tokenGenerator');
 
 const userSignup = async (req,res)=>{
     try{
@@ -74,7 +75,7 @@ const confirmOTP = async(req,res)=>{
         if(otps<1){
             return error_400_bad_request(res,'no shuch user found or code expired!');
         }else{
-            const validOtp = await bcrypt.compare(req.body.number, otps[0].otp);
+            const validOtp = await bcrypt.compare(six_digit, otps[0].otp);
             if(validOtp === true){
                 const user = new User({
                     _id: new mongoose.Types.ObjectId(),
@@ -82,8 +83,14 @@ const confirmOTP = async(req,res)=>{
                     password:otps[0].password ,
                     name : otps[0].name,
                   });
+                await user.save();
                 await OTP.deleteMany({name:req.body.name});
-                
+                const token = tokenGenerator.Generator(user.email,user._id); 
+                  return res.status(200).json({
+                    token: token,
+                    "message": "successful"
+                  });
+
 
             }else{
                 return error_400_bad_request(res,'wrong code!');

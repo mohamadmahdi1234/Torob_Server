@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
         },
         process.env.JWT_KEY,
         {
-          expiresIn: "1m"
+          expiresIn: "30m"
         }
       );
 
