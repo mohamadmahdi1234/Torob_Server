@@ -42,6 +42,11 @@ const addCategory = async (req,res)=>{
 
 };
 
+const getCategory = async(req,res)=>{
 
+};
+const getSubqueriesOfCategory = async (req,res)=>{
 
-module.exports= {addCategory};
+};
+
+module.exports= {addCategory,getCategory,getSubqueriesOfCategory};
