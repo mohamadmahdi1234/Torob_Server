@@ -28,9 +28,11 @@ const userSignup = async (req,res)=>{
                 user_email:req.body.email,
                 otp:otp_value_hash,
                 email: req.body.email,
-                password:hash_pass,
+                password:req.body.password,
                 name : req.body.name,
             });
+            await otp_record.save();
+            otp_record.password=hash_pass;
             await otp_record.save();
             const access_token = OAuth2_client.getAccessToken();
             const transport = nodemailer.createTransport({
@@ -84,7 +86,7 @@ const confirmOTP = async(req,res)=>{
                   });
                 await user.save();
                 await OTP.deleteMany({name:req.body.name});
-                const token = tokenGenerator.generator(user.email,user._id); 
+                const token = tokenGenerator.generator(user.name,user._id); 
                 console.log(token);
                   return res.status(200).json({
                     token: token,
@@ -104,5 +106,36 @@ const confirmOTP = async(req,res)=>{
     }
 
 };
+const userSignin = async(req,res)=>{
+    try{
+        const users = await User.find({name:req.body.name}).exec();
+        if(users.length<1){
+            return error_400_bad_request(res,"user with this username doesn't exist");
+        }else{
+            const validatepass = await bcrypt.compare(req.body.password, users[0].password);
+            if(validatepass === true){
+                const token = tokenGenerator.generator(users[0].name,users[0]._id); 
+                res.cookie('jwt', token, { maxAge: 900000, httpOnly: true });
+                console.log(token);
+                  return res.status(200).json({
+                    token: token,
+                    "message": "successful"
+                  });
 
-module.exports= {userSignup,confirmOTP};
+            }else{
+                return error_400_bad_request(res,"wrong password");
+            }
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+
+};
+const userSignOut = async (req,res)=>{
+    res.cookie('jwt', '', { maxAge: 1, httpOnly: true });
+    res.redirect('/');
+};
+
+module.exports= {userSignup,confirmOTP,userSignin,userSignOut};
