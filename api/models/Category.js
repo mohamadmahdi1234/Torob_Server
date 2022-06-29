@@ -10,12 +10,13 @@ const CategorySchema = mongoose.Schema({
         type:String,
         required:true
     },
-    subQueries: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+    subQueries: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     parent : {
         type:String,
         required:true,
         default:''
-    }
+    },
+    heigh :{type:Number,default:0}
         
 },{timestamps:true});
 
