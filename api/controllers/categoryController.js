@@ -19,12 +19,18 @@ const addCategory = async (req,res)=>{
                 const cat = new Category({
                     _id: new mongoose.Types.ObjectId(),
                     name:name_of_category,
-                    path:search_for
+                    path:search_for,
+                    parent : path_category_tree
                 });
                 await cat.save();
-            return res.status(200).json({
-                message:"category addded succesfully!"
-            });
+                const father = await Category.find({path:path_category_tree}).exec();
+                if(father.length>0){
+                    father[0].subQueries = father[0].subQueries.concat(cat._id);
+                    await father[0].save();
+                }
+                return res.status(200).json({
+                    message:"category addded succesfully!"
+                });
             }else{
                 return error_400_bad_request(res,'this path of category is already exist!')
             }
