@@ -104,5 +104,8 @@ const confirmOTP = async(req,res)=>{
     }
 
 };
+const userSignin = async(req,res)=>{
 
-module.exports= {userSignup,confirmOTP};
+};
+
+module.exports= {userSignup,confirmOTP,userSignin};
