@@ -133,5 +133,8 @@ const userSignin = async(req,res)=>{
     }
 
 };
+const userSignOut = async (req,res)=>{
 
-module.exports= {userSignup,confirmOTP,userSignin};
+};
+
+module.exports= {userSignup,confirmOTP,userSignin,userSignOut};
