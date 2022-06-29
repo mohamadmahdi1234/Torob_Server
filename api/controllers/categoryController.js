@@ -5,7 +5,7 @@ const error_400_bad_request = require('../Error_400');
 
 const addCategory = async (req,res)=>{
     try{
-        console.log(req.query.path);
+        console.log(req.query.path+" "+req.query.name);
         
 
     }catch(err){
