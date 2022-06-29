@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const otp =require('./api/models/OTP');
 require('dotenv').config();
 const authRouter = require('./api/routers/authRouter');
+const categoryRouter = require('./api/routers/categoryRouter');
 const mongoString = `mongodb+srv://mahdy313:${process.env.ATLAS_PASS}@cluster0.ljbe7.mongodb.net/TorobDataBase?retryWrites=true&w=majority`;
 
 mongoose.connect(mongoString, {useNewUrlParser: true})
@@ -18,6 +19,7 @@ mongoose.connection.on("open", function() {
   console.log("Connected to MongoDB database.")
 })
 /*mongoose.connect('mongodb://localhost/Torob_DataBase')
+mongoose.connect('mongodb://localhost/Torob_DataBase')
   .then(() => {
     console.log('connected to database')
   })
@@ -43,6 +45,7 @@ app.use((req,res,next)=>{
 });
 
 app.use('/api/auth',authRouter);
+app.use('/api/category',categoryRouter);
 
 app.use((req,res,next)=>{
     const error = new Error('not found');
