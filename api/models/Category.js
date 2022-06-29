@@ -9,6 +9,11 @@ const CategorySchema = mongoose.Schema({
     path:{
         type:String,
         required:true
+    },
+    subQueries: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+    parent : {
+        type:String,
+        required:true
     }
         
 },{timestamps:true});
