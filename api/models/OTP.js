@@ -3,7 +3,9 @@ const { isValidPassword } = require('mongoose-custom-validators');
 
 const OTPSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    user_email : {type:String,required: true},
+    user_email : {type:String,required: true, 
+        unique: true, 
+        match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/},
     otp:{
         type:String,
         required:true
@@ -12,8 +14,7 @@ const OTPSchema = mongoose.Schema({
     name : {
         type : String,
         required: true, 
-        unique: true, 
-        match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+       
     },
     password: { type: String,
         required: true,
