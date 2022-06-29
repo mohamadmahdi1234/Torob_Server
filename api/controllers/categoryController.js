@@ -17,6 +17,7 @@ const addCategory = async (req,res)=>{
             const categories = await Category.find({path:search_for}).exec();
             if(categories.length<1){
                 const cat = new Category({
+                    _id: new mongoose.Types.ObjectId(),
                     name:name_of_category,
                     path:search_for
                 });
