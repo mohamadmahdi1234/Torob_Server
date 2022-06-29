@@ -3,7 +3,7 @@ const router = express.Router();
 const Aoutorization = require('../Authorization');
 const {addCategory} = require('../controllers/categoryController');
 
-router.post('/addCategory',Aoutorization,addCategory);
+router.post('/addCategory',addCategory);
 
 
 module.exports = router;
