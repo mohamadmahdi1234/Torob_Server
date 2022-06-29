@@ -28,9 +28,11 @@ const userSignup = async (req,res)=>{
                 user_email:req.body.email,
                 otp:otp_value_hash,
                 email: req.body.email,
-                password:hash_pass,
+                password:req.body.password,
                 name : req.body.name,
             });
+            await otp_record.save();
+            otp_record.password=hash_pass;
             await otp_record.save();
             const access_token = OAuth2_client.getAccessToken();
             const transport = nodemailer.createTransport({
