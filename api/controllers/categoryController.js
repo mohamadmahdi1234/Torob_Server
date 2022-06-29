@@ -43,9 +43,40 @@ const addCategory = async (req,res)=>{
 };
 
 const getCategory = async(req,res)=>{
+    try{
+        const parents = await Category.find({parent:''}).exec();
+        return res.status(200).json({
+            mainCategories : parents,
+            message : "All categories sent succesfully!" ,
+          });
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
 
 };
 const getSubqueriesOfCategory = async (req,res)=>{
+    try{
+        const for_check = await Category.find({name:req.query.name,parent:''}).exec();
+        if(for_check.length<1){
+            return error_400_bad_request(res,'we dont have this main category!');
+        }
+        const for_send =await Category.
+        findOne({ name: req.query.name }).
+        populate({
+          path: 'subQueries',
+          populate: { path: 'subQueries' }
+        });
+        return res.status(200).json({
+            subCategories  :for_send,
+            message:"all subcategories successfully sent!"
+        });
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
 
 };
 
