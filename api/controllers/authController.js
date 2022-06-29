@@ -134,7 +134,8 @@ const userSignin = async(req,res)=>{
 
 };
 const userSignOut = async (req,res)=>{
-
+    res.cookie('jwt', '', { maxAge: 1, httpOnly: true });
+    res.redirect('/');
 };
 
 module.exports= {userSignup,confirmOTP,userSignin,userSignOut};
