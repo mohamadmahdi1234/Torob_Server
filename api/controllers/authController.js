@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Otp = require('../models/OTP');
 const User = require('../models/User');
 const bcrypt = require("bcrypt");
 const error_400_bad_request = require('../Error_400');
