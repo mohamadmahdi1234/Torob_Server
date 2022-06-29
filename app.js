@@ -5,6 +5,7 @@ const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const otp =require('./api/models/OTP');
 const authRouter = require('./api/routers/authRouter');
+const categoryRouter = require('./api/routers/categoryRouter');
 mongoose.connect('mongodb://localhost/Torob_DataBase')
   .then(() => {
     console.log('connected to database')
@@ -31,6 +32,7 @@ app.use((req,res,next)=>{
 });
 
 app.use('/api/auth',authRouter);
+app.use('/api/category',categoryRouter);
 
 app.use((req,res,next)=>{
     const error = new Error('not found');
