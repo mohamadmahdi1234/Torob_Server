@@ -4,12 +4,24 @@ const morgan = require('morgan');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const otp =require('./api/models/OTP');
+require('dotenv').config();
 const authRouter = require('./api/routers/authRouter');
-mongoose.connect('mongodb://localhost/Torob_DataBase')
+const mongoString = `mongodb+srv://mahdy313:${process.env.ATLAS_PASS}@cluster0.ljbe7.mongodb.net/TorobDataBase?retryWrites=true&w=majority`;
+
+mongoose.connect(mongoString, {useNewUrlParser: true})
+
+mongoose.connection.on("error", function(error) {
+  console.log(error)
+})
+
+mongoose.connection.on("open", function() {
+  console.log("Connected to MongoDB database.")
+})
+/*mongoose.connect('mongodb://localhost/Torob_DataBase')
   .then(() => {
     console.log('connected to database')
   })
-  .catch(err => console.log(err))
+  .catch(err => console.log(err))*/
 
 //middlewares
 app.use(morgan('dev'));
