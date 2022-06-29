@@ -76,6 +76,10 @@ const confirmOTP = async(req,res)=>{
         if(otps<1){
             return error_400_bad_request(res,'no shuch user found or code expired!');
         }else{
+            const yaft = await User.find({name:req.body.name}).exec();
+            if(yaft.length>0){
+                return error_400_bad_request(res,'in validation there was problem try again pls from first!')
+            }
             const validOtp = await bcrypt.compare(six_digit, otps[0].otp);
             if(validOtp === true){
                 const user = new User({
