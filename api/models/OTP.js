@@ -11,7 +11,9 @@ const OTPSchema = mongoose.Schema({
     createdAt:{type:Date,default:Date.now,index:{expires:300}},
     name : {
         type : String,
-        required: true
+        required: true, 
+        unique: true, 
+        match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
     },
     password: { type: String,
         required: true,
