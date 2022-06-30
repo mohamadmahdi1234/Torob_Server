@@ -95,8 +95,13 @@ const addProduct = async(req,res)=>{
         }
         const check_path = await Category.find({path:req.body.pathCategory}).exec();
         if(check_path.length<1){
-            return error_400_bad_request(res,'your wanna category doesnot exist!')
-        }else{
+            return error_400_bad_request(res,'your wanna category doesnot exist!');
+        }
+        if(check_path[0].subQueries.length>0){
+            return error_400_bad_request(res,'your category path is not leaf!');
+        }
+        else{
+
             let flag = false;
             let our_store = [];
             await Promise.all(
@@ -110,6 +115,10 @@ const addProduct = async(req,res)=>{
                     }
                 })
             );
+            if(flag === false){
+                return error_400_bad_request(res,'store with this name doesnot exist!');
+            }
+            
             const is_there_in_site = await Product.find({name:req.body.productName,pathCategory:req.body.pathCategory}).exec();
             if(is_there_in_site.length>0){//kala dar kol site hast
                 let is_in_store = false;
@@ -138,11 +147,11 @@ const addProduct = async(req,res)=>{
                         price:req.body.productPrice,
                         pathCategory:req.body.pathCategory,
                         fields:req.body.productFields,
-                        stores : [pr[0]._id]
+                        stores : [our_store[0]._id]
                     });
                     await pd_to_add.save();
-                    pr[0].products = pr[0].products.concat(pd_to_add._id);
-                    await pr[0].save();
+                    our_store[0].products = our_store[0].products.concat(pd_to_add._id);
+                    await our_store[0].save();
                     
                 }
 
@@ -153,12 +162,12 @@ const addProduct = async(req,res)=>{
                     price:req.body.productPrice,
                     pathCategory:req.body.pathCategory,
                     fields:req.body.productFields,
-                    stores : [pr[0]._id],
+                    stores : [our_store[0]._id],
                     first:true
                 });
                 await pd_to_add.save();
-                pr[0].products = pr[0].products.concat(pd_to_add._id);
-                    await pr[0].save();
+                our_store[0].products = our_store[0].products.concat(pd_to_add._id);
+                await our_store[0].save();
             }
             return res.status(200).json({
                 message:"process of add was succesful!"

@@ -4,7 +4,8 @@ const ProductSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name :{
         type:String,
-        required:true
+        required:true,
+        unique:false
     },
     price:{
         type:Number,
