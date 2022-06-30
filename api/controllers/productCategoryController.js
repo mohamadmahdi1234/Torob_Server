@@ -50,6 +50,34 @@ const addproduct = async (req,res)=>{
         return error_400_bad_request(res,err.message);
     }
 };
+
+const filterCategoryProducts = async (req,res)=>{
+    try{
+        if(req.query.order==='cheap' || req.query.order==='expensive' || req.query.order==='newest'){
+            let products = [];
+            if(req.query.order==='cheap'){
+                const our_regex = req.query.productCategory;
+                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`}}).sort({price:1}).select('name price stores pathCategory -_id').exec();
+            }else if(req.query.order==='expensive'){
+                const our_regex = req.query.productCategory;
+                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`}}).sort({price:-1}).select('name price stores pathCategory -_id').exec();
+            }else if(req.query.order === 'newest'){
+                const our_regex = req.query.productCategory;
+                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`}}).sort({createdAt:-1}).select('name price stores pathCategory -_id').exec();
+            }
+            return res.status(200).json({
+                filtered : products,
+                message :"filtered succesfully!"
+            });
+        }else{
+            return error_400_bad_request(res,'your wanna order sort is not defined!');
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+};
   
 
-module.exports= {getProductsWithCategory,addproduct};
+module.exports= {getProductsWithCategory,addproduct,filterCategoryProducts};
