@@ -45,7 +45,9 @@ app.use((req,res,next)=>{
     }
     next();
 });
-
+app.get("/", function (req, res) {
+    res.send("<h1>Hello World!</h1>")
+  })
 app.use('/api/auth',authRouter);
 app.use('/api/category',categoryRouter);
 app.use('/api/categoryProduct',categoryProductRouter);
