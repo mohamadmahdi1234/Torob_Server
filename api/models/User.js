@@ -25,6 +25,10 @@ const UserSchema = mongoose.Schema({
         default:false
     },
     favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    lastSeens:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    hold_for_last:{type:Number,default:0},
+    storeOwnerHolder :{ type: mongoose.Schema.Types.ObjectId, ref: 'StoreOwner' },
+    isStoreOwner:{type:Boolean,default:false},
     
 },{timestamps:true});
 

@@ -11,14 +11,14 @@ const getProductsWithCategory = async (req,res)=>{
             return error_400_bad_request(res,'root category wrong!');
         }
         if(req.query.productCategory === 'm' && req.query.productCategory.split("-").length===1 ){
-            const all_products = await Product.find({}).exec();
+            const all_products = await Product.find({first:true}).exec();
             return res.status(200).json({
                 products :all_products,
                 message:'all products sent succesfully!'
             });
         }else{
             const our_regex = req.query.productCategory;
-            const products = await Product.find({pathCategory:{$regex: `${our_regex}.*`}}).select('name price stores pathCategory -_id').exec();
+            const products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).select('name price stores pathCategory _id').exec();
             return res.status(200).json({
                 products :products,
                 message:'all products sent succesfully!'
@@ -39,6 +39,7 @@ const addproduct = async (req,res)=>{
             name : req.body.name,
             price:req.body.price,
             pathCategory : req.body.pathCategory
+            ,first:req.body.first
         });
         await product.save();
         return res.status(200).json({

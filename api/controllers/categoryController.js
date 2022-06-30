@@ -6,7 +6,6 @@ const error_400_bad_request = require('../Error_400');
 
 const addCategory = async (req,res)=>{
     try{
-        console.log(req.query.path+" "+req.query.name);
         const users = await User.find({name:req.userData.name}).exec();
         if(users[0].isAdmin === false){
             return error_400_bad_request(res,"only admin can!");
@@ -14,6 +13,13 @@ const addCategory = async (req,res)=>{
             const path_category_tree = req.query.path;
             const name_of_category = req.query.name;
             const search_for = path_category_tree+"-"+name_of_category;
+            if(path_category_tree !== 'm'){
+                const che = await Category.find({path:path_category_tree}).exec();
+            if(che<1){
+                return error_400_bad_request(res,"your path category doesnot exist!");
+            }
+            }
+            
             const categories = await Category.find({path:search_for}).exec();
             if(categories.length<1){
                 const for_check = req.query.path.split("-").length;
