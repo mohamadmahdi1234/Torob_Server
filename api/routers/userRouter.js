@@ -4,6 +4,6 @@ const Aoutorization = require('../Authorization');
 const {userAddToFavorite,getUserFavorits} = require('../controllers/userController');
 
 router.post('/addproducttofavorite',Aoutorization,userAddToFavorite);
-router.post('/getfavorits',Aoutorization,getUserFavorits);
+router.get('/getfavorits',Aoutorization,getUserFavorits);
 
 module.exports = router;
