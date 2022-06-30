@@ -152,4 +152,21 @@ const getProductDetail = async(req,res)=>{
     }
 };
 
-module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens,getLastRecentlySeen,getProductDetail};
+const buyProduct = async(req,res)=>{
+    try{
+        const store = await Store.find({name:req.body.name}).exec();
+        if(store.length<1){
+            return error_400_bad_request(res,'store doesnot find!');
+        }else{
+            return res.status(200).json({
+                link : store[0].address
+            });
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+};
+
+module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens,getLastRecentlySeen,getProductDetail,buyProduct};
