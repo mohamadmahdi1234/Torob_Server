@@ -4,7 +4,7 @@ const User = require("../models/User");
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 const error_400_bad_request = require('../Error_400');
-
+const Store = require('../models/Store');
 const userAddToFavorite = async (req,res)=>{
     try{
         const product = await Product.find({_id:req.body._id,name:req.body.productName,pathCategory:req.body.pathCategory}).exec();
@@ -125,5 +125,31 @@ const getLastRecentlySeen = async(req,res)=>{
         return error_400_bad_request(res,err.message);
     }
 };
+const getProductDetail = async(req,res)=>{
+    try{
+        const products = await Product.find({name:req.body.name,pathCategory:req.body.path}).sort({price:1}).exec();
+        console.log(products);
+        const low_price = products[0].price;
+        const max_price = products[products.length-1].price;
+        const for_send = await Promise.all(
+            products.map(async prd=>{
+                const str = await Store.find({_id:prd.stores[0]}).exec();
+                return {
+                    product_name: prd.name,
+                    product_price : prd.price,
+                    store : str[0]
+                }
+            })
+        );
+        return res.status(200).json({
+                lowPrice:low_price,
+                maxPrice:max_price,
+                products_with_diff_stores:for_send
+        });
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+};
 
-module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens,getLastRecentlySeen};
+module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens,getLastRecentlySeen,getProductDetail};
