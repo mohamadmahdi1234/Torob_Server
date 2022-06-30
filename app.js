@@ -9,6 +9,7 @@ const categoryRouter = require('./api/routers/categoryRouter');
 const categoryProductRouter = require('./api/routers/productCategoryRouter');
 const userRouter = require('./api/routers/userRouter');
 const adminRouter = require('./api/routers/adminRouter');
+const storeOwnerRouter = require('./api/routers/storeOwnerRouter');
 mongoose.connect('mongodb://localhost/Torob_DataBase')
   .then(() => {
     console.log('connected to database')
@@ -39,6 +40,7 @@ app.use('/api/category',categoryRouter);
 app.use('/api/categoryProduct',categoryProductRouter);
 app.use('/api/user',userRouter);
 app.use('/api/admin',adminRouter);
+app.use('/api/storeOwner',storeOwnerRouter);
 
 app.use((req,res,next)=>{
     const error = new Error('not found');

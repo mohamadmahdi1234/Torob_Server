@@ -20,10 +20,11 @@ const addStoreOwner = async(req,res)=>{
                 _id: new mongoose.Types.ObjectId(),
                 mobile_number: req.body.mobile_number,
             });
+            const hash_pass = await bcrypt.hash(req.body.password, 10);
             const user = new User({
                 _id: new mongoose.Types.ObjectId(),
                 email: req.body.email,
-                password:req.body.password,
+                password:hash_pass,
                 name : req.body.name,
                 isStoreOwner:true,
                 storeOwnerHolder:storeOwner._id

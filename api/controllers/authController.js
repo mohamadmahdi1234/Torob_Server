@@ -91,6 +91,7 @@ const confirmOTP = async(req,res)=>{
                 await user.save();
                 await OTP.deleteMany({name:req.body.name});
                 const token = tokenGenerator.generator(user.name,user._id); 
+                res.cookie('jwt', token, { maxAge: 900000, httpOnly: true });
                 console.log(token);
                   return res.status(200).json({
                     token: token,
