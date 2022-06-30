@@ -82,4 +82,32 @@ const deleteFavorit = async (req,res)=>{
     }
 };
 
-module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit};
+const saveLastSeens = async (req,res)=>{
+    try{
+        const users = await User.find({name:req.userData.name}).exec();
+        const index = users[0].lastSeens.indexOf(req.body._id);
+        if(index>-1){
+            return res.status(200).json({
+                message:"saved successfully!"
+            });
+        }
+        const check = users[0].hold_for_last ===3;
+        if(check){
+            users[0].lastSeens[0] = req.body._id;
+            hold_for_last=1;
+        }else{
+            users[0].lastSeens[users[0].hold_for_last] = req.body._id;
+            users[0].hold_for_last = users[0].hold_for_last+1;
+        }
+        await users[0].save();
+        return res.status(200).json({
+            message:"saved successfully!"
+        });
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+}
+
+module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens};
