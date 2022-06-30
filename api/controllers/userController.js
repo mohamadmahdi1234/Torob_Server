@@ -108,6 +108,22 @@ const saveLastSeens = async (req,res)=>{
         console.log(err);
         return error_400_bad_request(res,err.message);
     }
-}
+};
 
-module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens};
+const getLastRecentlySeen = async(req,res)=>{
+    try{
+        const users = await User.findOne({ name: req.userData.name }).
+        populate('lastSeens').select('-isAdmin -password -email');
+        return res.status(200).json({
+            lastSeens : users,
+            message :"sent succesfully!"
+        });
+
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+};
+
+module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens,getLastRecentlySeen};
