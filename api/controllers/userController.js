@@ -5,6 +5,9 @@ const Category = require('../models/Category');
 const Product = require('../models/Product');
 const error_400_bad_request = require('../Error_400');
 const Store = require('../models/Store');
+const Report = require('../models/Report');
+
+
 const userAddToFavorite = async (req,res)=>{
     try{
         const product = await Product.find({_id:req.body._id,name:req.body.productName,pathCategory:req.body.pathCategory}).exec();
@@ -137,6 +140,7 @@ const getProductDetail = async(req,res)=>{
                 return {
                     product_name: prd.name,
                     product_price : prd.price,
+                    product_id:prd._id,
                     store : str[0]
                 }
             })
@@ -169,4 +173,33 @@ const buyProduct = async(req,res)=>{
     }
 };
 
-module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens,getLastRecentlySeen,getProductDetail,buyProduct};
+const makeReport = async (req,res)=>{
+    try{
+        const store = await Store.find({_id:req.body.store_id}).exec();
+        if(store.length<1){
+            return error_400_bad_request(res,'store doesnot exist!');
+        }else{
+            const product = await Product.find({_id:req.body.product_id}).exec();
+            if(product.length<1){
+                return error_400_bad_request(res,'product doesnot exist!');
+            }else{
+                const repo = new Report({
+                    _id: new mongoose.Types.ObjectId(),
+                    productId : store[0]._id,
+                    StoreId : product[0]._id,
+                    description:req.body.description
+                });
+                await repo.save();
+                return res.status(200).json({
+                    message:"report sent!"
+                });
+            }
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+};
+
+module.exports= {userAddToFavorite,getUserFavorits,deleteFavorit,saveLastSeens,getLastRecentlySeen,getProductDetail,buyProduct,makeReport};
