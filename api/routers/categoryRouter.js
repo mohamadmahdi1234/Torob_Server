@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Aoutorization = require('../Authorization');
-const {addCategory} = require('../controllers/categoryController');
+const {addCategory,getCategory,getSubqueriesOfCategory} = require('../controllers/categoryController');
 
 router.post('/addCategory',Aoutorization,addCategory);
-
+router.get('/getCategory',Aoutorization,getCategory);
+router.get('/getSubQueries',Aoutorization,getSubqueriesOfCategory);
 
 module.exports = router;
