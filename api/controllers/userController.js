@@ -30,6 +30,26 @@ const userAddToFavorite = async (req,res)=>{
     }
 };
  
+const getUserFavorits = async (req,res)=>{
+    try{
+        const user = await User.find({name:req.body.name}).exec();
+        if(user.length<1){
+            return error_400_bad_request(res,'user doesnot exist!');
+        }else{
+            const for_send =await User.
+            findOne({ name: req.query.name }).
+            populate('favorites');
+            return res.status(200).json({
+                subCategories  :for_send,
+                message:"user's favorit products successfully sent!"
+            });
+        }
 
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
 
-module.exports= {userAddToFavorite};
+};
+
+module.exports= {userAddToFavorite,getUserFavorits};
