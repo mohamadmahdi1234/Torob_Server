@@ -6,6 +6,7 @@ const Product = require('../models/Product');
 const StoreOwner = require('../models/StroreOwner');
 const error_400_bad_request = require('../Error_400');
 const tokenGenerator = require('../tokenGenerator');
+const Store = require('../models/Store');
 
 const editProfile = async (req,res)=>{
     try{
@@ -79,5 +80,52 @@ const getProfile = async (req,res)=>{
     }
 };
 
+const addProduct = async(req,res)=>{
+    try{
 
-module.exports= {editProfile,getProfile};
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+
+};
+
+const addStore = async(req,res)=>{
+    try{
+        const users = await User.find({name:req.userData.name}).exec();
+        if(users.length<1){
+            return error_400_bad_request(res,'user doesnot exist!');
+        }else{
+            if(users[0].isStoreOwner === false){
+                return error_400_bad_request(res,'regular user cannot acces to addStore');
+            }else{
+                const check_name = await Store.find({name:req.body.name}).exec();
+                if(check_name.length>0){
+                    return error_400_bad_request(res,'shop with this name already exist!');
+                }
+                const store = new Store({
+                    _id: new mongoose.Types.ObjectId(),
+                    name : req.body.name
+                });
+
+                await store.save();
+                const st_ow = await StoreOwner.find({_id:users[0].storeOwnerHolder}).exec();
+                if(st_ow.length<1){
+                    return error_400_bad_request(res,'maybe there was problem in add by admin ');
+                }
+                st_ow[0].stores = st_ow[0].stores.concat(store._id);
+                st_ow[0].save();
+                return res.status(200).json({
+                    message:"store successfuly added!"
+                });
+            }
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+};
+
+module.exports= {editProfile,getProfile,addProduct,addStore};
