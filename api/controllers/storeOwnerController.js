@@ -7,6 +7,7 @@ const StoreOwner = require('../models/StroreOwner');
 const error_400_bad_request = require('../Error_400');
 const tokenGenerator = require('../tokenGenerator');
 const Store = require('../models/Store');
+const Report = require("../models/Report");
 
 const editProfile = async (req,res)=>{
     try{
@@ -218,4 +219,64 @@ const addStore = async(req,res)=>{
     }
 };
 
-module.exports= {editProfile,getProfile,addProduct,addStore};
+const seeReports = async(req,res)=>{
+    try{
+        const users = await User.find({name:req.userData.name}).exec();
+        if(users.length<1){
+            return error_400_bad_request(res,'user doesnot exist!');
+        }else{
+            if(users[0].isStoreOwner === true){
+                const storeOwner = await StoreOwner.find({_id:users[0].storeOwnerHolder}).exec();
+                let flag = false;
+                let our_store = [];
+                await Promise.all(
+                    storeOwner[0].stores.map(async st_id=>{
+                        const st = await Store.find({_id:st_id}).exec();
+                        if(st.length>0){
+                            if(st[0].name === req.body.storeName){
+                                flag = true;
+                                our_store = st;
+                            }
+                        }
+                    })
+                );
+                if(flag === false){
+                    return error_400_bad_request(res,'store with this name doesnot exist!');
+                }else{
+                    const repoes = await Report.find({StoreId:our_store[0]._id}).exec();
+                    if(repoes.length<1){
+                        return res.status(200).json({
+                            message:'there is not any report!'
+                        });
+                    }
+                    const for_send = await Promise.all(
+                        repoes.map(async rp=>{
+                            const prd = await Product.find({_id:rp.productId}).exec();
+                            return{
+                                description:rp.description,
+                                productName:prd.name,
+                                productCategorypath : prd.pathCategory,
+                                productPrice:prd.price,
+                                producttField:prd.fields,
+                                productId : prd._id
+                            }
+                        })
+                    );
+                    return res.status(200).json({
+                        storeName:our_store[0].name,
+                        reoprts:for_send
+                    });
+                }
+
+            }else{
+                return error_400_bad_request(res,'only storeOwners can access!');
+            }
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+}
+
+module.exports= {editProfile,getProfile,addProduct,addStore,seeReports};
