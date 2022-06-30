@@ -6,7 +6,6 @@ const error_400_bad_request = require('../Error_400');
 
 const addCategory = async (req,res)=>{
     try{
-        console.log(req.query.path+" "+req.query.name);
         const users = await User.find({name:req.userData.name}).exec();
         if(users[0].isAdmin === false){
             return error_400_bad_request(res,"only admin can!");
