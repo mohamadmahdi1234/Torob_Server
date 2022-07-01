@@ -3,8 +3,7 @@ const { isValidPassword } = require('mongoose-custom-validators');
 
 const OTPSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    user_email : {type:String,required: true, 
-        unique: true, 
+    user_email : {type:String,required: true,  
         match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/},
     otp:{
         type:String,
@@ -21,7 +20,7 @@ const OTPSchema = mongoose.Schema({
         min: [6, 'Too few'],
         validate: {
            validator: (str) => isValidPassword(str, { nonalpha: false,minlength:8 }),
-           message: 'Password must have at least: 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.'
+           message: 'Password must have at least: 1 uppercase letter, 1 lowercase letter, 1 number.'
          } },
     
 },{timestamps:true});

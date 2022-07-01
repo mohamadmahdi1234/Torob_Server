@@ -15,6 +15,7 @@ const editProfile = async (req,res)=>{
         if(users.length<1){
             return error_400_bad_request(res,'user doesnot exist!');
         }else{
+            let token = '';
             if(users[0].isStoreOwner === true){
                 let storeOwner =[];
                 if(req.body.name !== undefined){
@@ -23,7 +24,7 @@ const editProfile = async (req,res)=>{
                         return error_400_bad_request(res,'cannot update your name!this name already exist!');
                     }else{
                         users[0].name=req.body.name;
-                        const token = tokenGenerator.generator(users[0].name,users[0]._id); 
+                        token = tokenGenerator.generator(users[0].name,users[0]._id); 
                         res.cookie('jwt', token, { maxAge: 900000, httpOnly: true });
                     }
                 }
@@ -42,7 +43,8 @@ const editProfile = async (req,res)=>{
                     await storeOwner[0].save();
                 }
                 return res.status(200).json({
-                    message:"edit succesfully!"
+                    message:"edit succesfully!",
+                    token: token
                 });
             }else{
                 return error_400_bad_request(res,'user is not storeOwner!');
@@ -233,7 +235,7 @@ const seeReports = async(req,res)=>{
                     storeOwner[0].stores.map(async st_id=>{
                         const st = await Store.find({_id:st_id}).exec();
                         if(st.length>0){
-                            if(st[0].name === req.body.storeName){
+                            if(st[0].name === req.query.storeName){
                                 flag = true;
                                 our_store = st;
                             }
@@ -254,17 +256,18 @@ const seeReports = async(req,res)=>{
                             const prd = await Product.find({_id:rp.productId}).exec();
                             return{
                                 description:rp.description,
-                                productName:prd.name,
-                                productCategorypath : prd.pathCategory,
-                                productPrice:prd.price,
-                                producttField:prd.fields,
-                                productId : prd._id
+                                productName:prd[0].name,
+                                productCategorypath : prd[0].pathCategory,
+                                productPrice:prd[0].price,
+                                producttField:prd[0].fields,
+                                productId : prd[0]._id
                             }
                         })
                     );
                     return res.status(200).json({
                         storeName:our_store[0].name,
-                        reoprts:for_send
+                        reports:for_send,
+                        message:"succesful"
                     });
                 }
 

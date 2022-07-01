@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const morgan = require('morgan');
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
@@ -20,11 +21,12 @@ mongoose.connect('mongodb://localhost/Torob_DataBase')
 app.use(morgan('dev'));
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
-
+app.use(cors());
 
 //this part is from youtube maximilian
 app.use((req,res,next)=>{
     res.header('Access-Control-Allow-Origin','*');
+    res.header('Access-Control-Expose-Headers' ,'Authorization');
     res.header('Access-Control-Allow-Headers',
     'Origin,X-Requested-with,Content-Type,Accept,Authorization');
     if(req.method ==='OPTIONS' ){
