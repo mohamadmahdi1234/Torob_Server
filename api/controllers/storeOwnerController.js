@@ -146,11 +146,12 @@ const addProduct = async(req,res)=>{
                 }else{
                     const pd_to_add = new Product({
                         _id: new mongoose.Types.ObjectId(),
-                        name:req.body.productName,
+                        name:is_there_in_site[0].name,
                         price:req.body.productPrice,
                         pathCategory:req.body.pathCategory,
-                        fields:req.body.productFields,
-                        stores : [our_store[0]._id]
+                        fields:is_there_in_site[0].fields,
+                        stores : [our_store[0]._id],
+                        link:req.body.link
                     });
                     await pd_to_add.save();
                     our_store[0].products = our_store[0].products.concat(pd_to_add._id);
@@ -164,9 +165,10 @@ const addProduct = async(req,res)=>{
                     name:req.body.productName,
                     price:req.body.productPrice,
                     pathCategory:req.body.pathCategory,
-                    fields:req.body.productFields,
+                    fields:req.body.productFields,//+check_path[0].fields
                     stores : [our_store[0]._id],
-                    first:true
+                    first:true,
+                    link:req.body.link
                 });
                 await pd_to_add.save();
                 our_store[0].products = our_store[0].products.concat(pd_to_add._id);
@@ -282,4 +284,27 @@ const seeReports = async(req,res)=>{
     }
 }
 
-module.exports= {editProfile,getProfile,addProduct,addStore,seeReports};
+const getfields = async(req,res)=>{
+    try{
+        
+        if(req.query.pc==="null"){
+            console.log("kam");
+            return error_400_bad_request(res,'pls enter pathcategory first');
+        }
+        const categories = await Category.find({path:req.query.pc}).exec();
+        if(categories.length<1){
+            return error_400_bad_request(res,'this path doesnot exist!');
+        }else{
+            return res.status(200).json({
+                message:'success',
+                fields:categories[0].fields
+            });
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+}
+
+module.exports= {editProfile,getProfile,addProduct,addStore,seeReports,getfields};

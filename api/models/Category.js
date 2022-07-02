@@ -16,7 +16,8 @@ const CategorySchema = mongoose.Schema({
         required:true,
         default:''
     },
-    heigh :{type:Number,default:0}
+    heigh :{type:Number,default:0},
+    fields : {type:String,required:true}
         
 },{timestamps:true});
 

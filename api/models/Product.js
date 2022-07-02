@@ -15,7 +15,8 @@ const ProductSchema = mongoose.Schema({
     stores: [{ type: mongoose.Schema.Types.ObjectId}], 
     pathCategory : {type:String,required:true} ,
     fields:{type: Object},
-    first:{type:Boolean,default:false}
+    first:{type:Boolean,default:false},
+    link:{type:String,required:true}
 },{timestamps:true});
 
 module.exports = mongoose.model('Product', ProductSchema);

@@ -6,10 +6,14 @@ const error_400_bad_request = require('../Error_400');
 
 const addCategory = async (req,res)=>{
     try{
+        
         const users = await User.find({name:req.userData.name}).exec();
         if(users[0].isAdmin === false){
             return error_400_bad_request(res,"only admin can!");
         }else{
+            if(req.query.fields.split("-").length<4){
+                return error_400_bad_request(res,"number of fields cannot be less than 4");
+            }
             const path_category_tree = req.query.path;
             const name_of_category = req.query.name;
             const search_for = path_category_tree+"-"+name_of_category;
@@ -36,7 +40,8 @@ const addCategory = async (req,res)=>{
                     _id: new mongoose.Types.ObjectId(),
                     name:name_of_category,
                     path:search_for,
-                    parent : path_category_tree
+                    parent : path_category_tree,
+                    fields:req.query.fields
                 });
                 await cat.save();
                 const father = await Category.find({path:path_category_tree}).exec();
