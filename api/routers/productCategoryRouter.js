@@ -4,7 +4,7 @@ const Aoutorization = require('../Authorization');
 const {getProductsWithCategory,addproduct,filterCategoryProducts} = require('../controllers/productCategoryController');
 
 router.post('/addproduct',addproduct);
-router.get('/getProducts',Aoutorization,getProductsWithCategory);
-router.get('/filter',Aoutorization,filterCategoryProducts);
+router.get('/getProducts',getProductsWithCategory);
+router.get('/filter',filterCategoryProducts);
 
 module.exports = router;

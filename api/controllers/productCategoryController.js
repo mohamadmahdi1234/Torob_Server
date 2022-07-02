@@ -18,7 +18,7 @@ const getProductsWithCategory = async (req,res)=>{
             });
         }else{
             const our_regex = req.query.productCategory;
-            const products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).select('name price stores pathCategory _id').exec();
+            const products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).exec();
             return res.status(200).json({
                 products :products,
                 message:'all products sent succesfully!'
@@ -58,16 +58,16 @@ const filterCategoryProducts = async (req,res)=>{
             let products = [];
             if(req.query.order==='cheap'){
                 const our_regex = req.query.productCategory;
-                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`}}).sort({price:1}).select('name price stores pathCategory -_id').exec();
+                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).sort({price:1}).select('name price stores pathCategory -_id').exec();
             }else if(req.query.order==='expensive'){
                 const our_regex = req.query.productCategory;
-                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`}}).sort({price:-1}).select('name price stores pathCategory -_id').exec();
+                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).sort({price:-1}).select('name price stores pathCategory -_id').exec();
             }else if(req.query.order === 'newest'){
                 const our_regex = req.query.productCategory;
-                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`}}).sort({createdAt:-1}).select('name price stores pathCategory -_id').exec();
+                products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).sort({createdAt:-1}).select('name price stores pathCategory -_id').exec();
             }
             return res.status(200).json({
-                filtered : products,
+                products : products,
                 message :"filtered succesfully!"
             });
         }else{

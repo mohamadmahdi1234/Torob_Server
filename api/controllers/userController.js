@@ -10,7 +10,7 @@ const Report = require('../models/Report');
 
 const userAddToFavorite = async (req,res)=>{
     try{
-        const product = await Product.find({_id:req.body._id,name:req.body.productName,pathCategory:req.body.pathCategory}).exec();
+        const product = await Product.find({_id:req.body._id}).exec();//change dadam motmaen nistam
         if(product.length<1){
             return error_400_bad_request(res,'this product doesnot exist anymore!');
         }else{
@@ -18,6 +18,10 @@ const userAddToFavorite = async (req,res)=>{
             if(user.length<1){
                 return error_400_bad_request(res,'user doesnot exist!');
             }else{
+                const check = user[0].favorites.includes(product[0]._id);
+                if(check===true){
+                    return error_400_bad_request(res,'you already have this in your favs!');
+                }
                 user[0].favorites = user[0].favorites.concat(product[0]._id);
                 await user[0].save();
                 return res.status(200).json({
@@ -62,6 +66,7 @@ const deleteFavorit = async (req,res)=>{
         if(users.length<1){
             return error_400_bad_request(res,'user doesnot exist!');
         }else{
+            console.log(req.body);
             const fav = await Product.find({_id:req.body._id}).exec();
             if(fav.length<1){
                 return error_400_bad_request(res,'product doesnot exist!');

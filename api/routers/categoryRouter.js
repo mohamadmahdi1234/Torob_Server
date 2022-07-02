@@ -5,6 +5,6 @@ const {addCategory,getCategory,getSubqueriesOfCategory} = require('../controller
 
 router.post('/addCategory',Aoutorization,addCategory);
 router.get('/getCategory',Aoutorization,getCategory);
-router.get('/getSubQueries',Aoutorization,getSubqueriesOfCategory);
+router.get('/getSubQueries',getSubqueriesOfCategory);
 
 module.exports = router;

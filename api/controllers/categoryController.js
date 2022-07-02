@@ -79,28 +79,34 @@ const getCategory = async(req,res)=>{
 };
 const getSubqueriesOfCategory = async (req,res)=>{
     try{
-        const for_check = await Category.find({name:req.query.name,parent:'m'}).exec();
+        const for_check = await Category.find({parent:'m'}).exec();
         if(for_check.length<1){
-            return error_400_bad_request(res,'we dont have this main category!');
+            return error_400_bad_request(res,'we dont main category!');
         }
-        let c = {
-            path:"subQueries",
-        };
-        let i=0;
-        while(i<for_check[0].heigh){
-            let d={
-            path:"subQueries",
-            populate:c
-            }
-            c=d;
-            i++;
-        }
-        const for_send =await Category.
-        findOne({ name: req.query.name }).
-        populate({
-          path: 'subQueries',
-          populate: c
-        });
+       const for_send = await Promise.all(
+            for_check.map(async ca =>{
+                let c = {
+                    path:"subQueries",
+                };
+                let i=0;
+                while(i<ca.heigh){
+                    let d={
+                    path:"subQueries",
+                    populate:c
+                    }
+                    c=d;
+                    i++;
+                }
+                const for_return = await Category.
+                findOne({ name: ca.name }).
+                populate({
+                  path: 'subQueries',
+                  populate: c
+                });
+                return for_return;
+            })
+        );
+        
         return res.status(200).json({
             subCategories  :for_send,
             message:"all subcategories successfully sent!"
