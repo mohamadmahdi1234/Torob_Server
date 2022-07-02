@@ -15,6 +15,7 @@ const editProfile = async (req,res)=>{
         if(users.length<1){
             return error_400_bad_request(res,'user doesnot exist!');
         }else{
+            let token = '';
             if(users[0].isStoreOwner === true){
                 let storeOwner =[];
                 if(req.body.name !== undefined){
@@ -23,7 +24,7 @@ const editProfile = async (req,res)=>{
                         return error_400_bad_request(res,'cannot update your name!this name already exist!');
                     }else{
                         users[0].name=req.body.name;
-                        const token = tokenGenerator.generator(users[0].name,users[0]._id); 
+                        token = tokenGenerator.generator(users[0].name,users[0]._id); 
                         res.cookie('jwt', token, { maxAge: 900000, httpOnly: true });
                     }
                 }
@@ -42,7 +43,8 @@ const editProfile = async (req,res)=>{
                     await storeOwner[0].save();
                 }
                 return res.status(200).json({
-                    message:"edit succesfully!"
+                    message:"edit succesfully!",
+                    token: token
                 });
             }else{
                 return error_400_bad_request(res,'user is not storeOwner!');
@@ -144,11 +146,12 @@ const addProduct = async(req,res)=>{
                 }else{
                     const pd_to_add = new Product({
                         _id: new mongoose.Types.ObjectId(),
-                        name:req.body.productName,
+                        name:is_there_in_site[0].name,
                         price:req.body.productPrice,
                         pathCategory:req.body.pathCategory,
-                        fields:req.body.productFields,
-                        stores : [our_store[0]._id]
+                        fields:is_there_in_site[0].fields,
+                        stores : [our_store[0]._id],
+                        link:req.body.link
                     });
                     await pd_to_add.save();
                     our_store[0].products = our_store[0].products.concat(pd_to_add._id);
@@ -162,9 +165,10 @@ const addProduct = async(req,res)=>{
                     name:req.body.productName,
                     price:req.body.productPrice,
                     pathCategory:req.body.pathCategory,
-                    fields:req.body.productFields,
+                    fields:req.body.productFields,//+check_path[0].fields
                     stores : [our_store[0]._id],
-                    first:true
+                    first:true,
+                    link:req.body.link
                 });
                 await pd_to_add.save();
                 our_store[0].products = our_store[0].products.concat(pd_to_add._id);
@@ -233,7 +237,7 @@ const seeReports = async(req,res)=>{
                     storeOwner[0].stores.map(async st_id=>{
                         const st = await Store.find({_id:st_id}).exec();
                         if(st.length>0){
-                            if(st[0].name === req.body.storeName){
+                            if(st[0].name === req.query.storeName){
                                 flag = true;
                                 our_store = st;
                             }
@@ -254,17 +258,18 @@ const seeReports = async(req,res)=>{
                             const prd = await Product.find({_id:rp.productId}).exec();
                             return{
                                 description:rp.description,
-                                productName:prd.name,
-                                productCategorypath : prd.pathCategory,
-                                productPrice:prd.price,
-                                producttField:prd.fields,
-                                productId : prd._id
+                                productName:prd[0].name,
+                                productCategorypath : prd[0].pathCategory,
+                                productPrice:prd[0].price,
+                                producttField:prd[0].fields,
+                                productId : prd[0]._id
                             }
                         })
                     );
                     return res.status(200).json({
                         storeName:our_store[0].name,
-                        reoprts:for_send
+                        reports:for_send,
+                        message:"succesful"
                     });
                 }
 
@@ -279,4 +284,27 @@ const seeReports = async(req,res)=>{
     }
 }
 
-module.exports= {editProfile,getProfile,addProduct,addStore,seeReports};
+const getfields = async(req,res)=>{
+    try{
+        
+        if(req.query.pc==="null"){
+            console.log("kam");
+            return error_400_bad_request(res,'pls enter pathcategory first');
+        }
+        const categories = await Category.find({path:req.query.pc}).exec();
+        if(categories.length<1){
+            return error_400_bad_request(res,'this path doesnot exist!');
+        }else{
+            return res.status(200).json({
+                message:'success',
+                fields:categories[0].fields
+            });
+        }
+
+    }catch(err){
+        console.log(err);
+        return error_400_bad_request(res,err.message);
+    }
+}
+
+module.exports= {editProfile,getProfile,addProduct,addStore,seeReports,getfields};

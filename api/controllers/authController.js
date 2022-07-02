@@ -95,6 +95,8 @@ const confirmOTP = async(req,res)=>{
                 console.log(token);
                   return res.status(200).json({
                     token: token,
+                    isAdmin:false,
+                    isStoreOwner:false,
                     "message": "successful"
                   });
 
@@ -124,6 +126,8 @@ const userSignin = async(req,res)=>{
                 console.log(token);
                   return res.status(200).json({
                     token: token,
+                    isAdmin:users[0].isAdmin,
+                    isStoreOwner:users[0].isStoreOwner,
                     "message": "successful"
                   });
 

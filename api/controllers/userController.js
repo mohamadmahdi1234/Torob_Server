@@ -40,8 +40,8 @@ const getUserFavorits = async (req,res)=>{
             return error_400_bad_request(res,'user doesnot exist!');
         }else{
             const for_send =await User.
-            findOne({ name: req.body.name }).
-            populate('favorites').select('name favorits _id');
+            findOne({ name: req.userData.name }).
+            populate('favorites');
             return res.status(200).json({
                 favorits  :for_send,
                 message:"user's favorit products successfully sent!"
