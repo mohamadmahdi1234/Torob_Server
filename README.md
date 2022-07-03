@@ -54,6 +54,6 @@ the second command will install all dependencies for the application. <br />
 the second command will run the programm.
 
 ## Extra
-This app will run on port 3000. If you have other programms that run on this port , You can manuallu change it from code.
+This app will run on port 3001. If you have other programms that run on this port , You can manuallu change it from code.
 
 
