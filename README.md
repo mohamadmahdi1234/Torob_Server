@@ -4,7 +4,7 @@ Internet Engineering final project server side
 
 # please notice
 you should get .env file from us before run the code because code without secret keys in .env file cannot work properly
-Then , run the following command :
+
 
 ## Table Of Contents
 * [Introduction](#introduction)
