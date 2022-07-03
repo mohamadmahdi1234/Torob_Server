@@ -42,7 +42,7 @@ To run this project, you need to install it locally using npm <br />
 First , you need to install node.js from this [link](https://nodejs.org/en/) <br />
 Then , clone the code and open it with any editor:
 
-##pls notice
+## pls notice
 you should get .env file from us and you should download or clone last_send branch not master
 Then , run the following command :
 
