@@ -1,6 +1,11 @@
 # Torob_Clone_Server
 Internet Engineering final project server side
 
+
+## pls notice
+you should get .env file from us and you should download or clone last_send branch not master
+Then , run the following command :
+
 ## Table Of Contents
 * [Introduction](#introduction)
 * [Technologies](#technologies)
