@@ -18,7 +18,7 @@ const getProductsWithCategory = async (req,res)=>{
             });
         }else{
             const our_regex = req.query.productCategory;
-            const products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).exec();
+            const products = await Product.find({pathCategory:{$regex: `${our_regex}.*`},first:true}).select('_id name price stores pathCategory ').exec();
             return res.status(200).json({
                 products :products,
                 message:'all products sent succesfully!'

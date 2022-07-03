@@ -253,9 +253,11 @@ const seeReports = async(req,res)=>{
                             message:'there is not any report!'
                         });
                     }
+                   console.log(repoes);
                     const for_send = await Promise.all(
                         repoes.map(async rp=>{
                             const prd = await Product.find({_id:rp.productId}).exec();
+                           // console.log(prd);
                             return{
                                 description:rp.description,
                                 productName:prd[0].name,
