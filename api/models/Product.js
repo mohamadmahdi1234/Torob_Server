@@ -14,7 +14,7 @@ const ProductSchema = mongoose.Schema({
     },
     stores: [{ type: mongoose.Schema.Types.ObjectId}], 
     pathCategory : {type:String,required:true} ,
-    fields:{type: Object},
+    fields:{type: Object,required:true},
     first:{type:Boolean,default:false},
     link:{type:String,required:true}
 },{timestamps:true});

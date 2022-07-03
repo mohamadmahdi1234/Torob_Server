@@ -7,7 +7,8 @@ const StoreSchema = mongoose.Schema({
         required :true
     },
     products:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
-    address :{type:String}
+    address :{type:String},
+    link:{type:String,required:true}
         
 },{timestamps:true});
 

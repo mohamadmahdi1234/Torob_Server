@@ -146,10 +146,13 @@ const getProductDetail = async(req,res)=>{
                     product_name: prd.name,
                     product_price : prd.price,
                     product_id:prd._id,
-                    store : str[0]
+                    store : str[0],
+                    fields:prd.fields,
+                    link:str[0].link!==undefined?str[0].link:'www.google.com'
                 }
             })
         );
+        console.log(for_send);
         return res.status(200).json({
                 lowPrice:low_price,
                 maxPrice:max_price,
@@ -180,6 +183,7 @@ const buyProduct = async(req,res)=>{
 
 const makeReport = async (req,res)=>{
     try{
+        console.log(req.body);
         const store = await Store.find({_id:req.body.store_id}).exec();
         if(store.length<1){
             return error_400_bad_request(res,'store doesnot exist!');
