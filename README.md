@@ -44,7 +44,7 @@ Then , clone the code and open it with any editor. <br />
 Then , run the following command :
 
 ```
-cd ../Torob-Clone-Master
+cd ../Torob-Server-Master
 npm install
 npm run install-dependecis
 npm start
