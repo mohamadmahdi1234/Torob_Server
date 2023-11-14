@@ -10,6 +10,7 @@ const Report = require('../models/Report');
 
 const userAddToFavorite = async (req,res)=>{
     try{
+        console.log(req.body);
         const product = await Product.find({_id:req.body._id}).exec();//change dadam motmaen nistam
         if(product.length<1){
             return error_400_bad_request(res,'this product doesnot exist anymore!');
@@ -194,8 +195,8 @@ const makeReport = async (req,res)=>{
             }else{
                 const repo = new Report({
                     _id: new mongoose.Types.ObjectId(),
-                    productId : store[0]._id,
-                    StoreId : product[0]._id,
+                     StoreId : store[0]._id,
+                     productId : product[0]._id,
                     description:req.body.description
                 });
                 await repo.save();

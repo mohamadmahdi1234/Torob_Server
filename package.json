@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon Server.js "
+    "start": "nodemon Server.js ",
+    "install-dependencies": "npm install bcrypt body-parser dotenv express googleapis jsonwebtoken mongoose mongoose-custom-validators nodemailer nodemon otp-generator"
   },
   "repository": {
     "type": "git",
